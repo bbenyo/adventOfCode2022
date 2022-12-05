@@ -48,6 +48,7 @@ public class Day4 implements InputHandler {
 	
 	@Override
 	public void handleInput(String line) {
+		line = line.trim();
 		String[] split = line.split(",");
 		if (split.length == 2) {
 			Range r1 = new Range(split[0]);

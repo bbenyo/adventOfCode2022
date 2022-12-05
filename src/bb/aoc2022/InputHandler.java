@@ -7,4 +7,5 @@ public interface InputHandler {
 	
 	// Write output to the console
 	public void output();
+	
 }

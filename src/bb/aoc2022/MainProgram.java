@@ -78,7 +78,7 @@ public class MainProgram {
 		try (BufferedReader bread = new BufferedReader(new FileReader(filename))) {
 			String line = bread.readLine();
 			while (line != null) {
-				handler.handleInput(line.trim());
+				handler.handleInput(line);
 				line = bread.readLine();
 			}
 			handler.output();

@@ -21,6 +21,7 @@ public class Day3 implements InputHandler {
 	
 	@Override
 	public void handleInput(String line) {
+		line = line.trim();
 		int end1 = line.length() / 2;
 		rucksack1 = parseRucksack(line.substring(0, end1));
 		rucksack2 = parseRucksack(line.substring(end1));

@@ -78,6 +78,7 @@ public class Day2 implements InputHandler {
 
 	@Override
 	public void handleInput(String line) {
+		line = line.trim();
 		String[] strategy = line.split(" ");
 		RockPaperScissors rps = new RockPaperScissors(strategy);
 		rps.computeScore();

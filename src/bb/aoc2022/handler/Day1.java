@@ -34,6 +34,7 @@ public class Day1 implements InputHandler {
 		
 	@Override
 	public void handleInput(String line) {
+		line = line.trim();
 		if (currentElf == null) {
 			currentElf = new Elf();
 		}
