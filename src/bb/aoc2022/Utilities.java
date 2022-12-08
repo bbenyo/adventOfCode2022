@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import org.apache.log4j.Logger;
@@ -155,6 +156,10 @@ public class Utilities {
 	
 	static public int sumIntsBetween(int start, int end) {
 		return (start + end) * (end - start + 1) / 2;
+	}
+	
+	static public String listToString(List<?> l, String separator) {
+		return l.stream().map(Object::toString).collect(Collectors.joining(separator));
 	}
 	
 }
