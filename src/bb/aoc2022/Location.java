@@ -22,6 +22,30 @@ public class Location  {
 	public void setX(int x) {
 		this.x = x;
 	}
+	
+	public void moveUp(int steps) {
+		y = y - steps;
+	}
+	
+	public void moveDown(int steps) {
+		y = y + steps;
+	}
+	
+	public void moveLeft(int steps) {
+		x = x - steps;
+	}
+	
+	public void moveRight(int steps) {
+		x = x + steps;
+	}
+	
+	public boolean isAdjacent(Location loc) {
+		if (loc.x >= x - 1 && loc.x <= x + 1 &&
+			loc.y >= y - 1 && loc.y <= y + 1) {
+			return true;
+		}
+		return false;
+	}
 
 	public int getY() {
 		return y;
