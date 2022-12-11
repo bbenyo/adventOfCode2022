@@ -107,4 +107,10 @@ public class Day5 implements InputHandler {
 		logger.info("Top of each stack: "+sb.toString());
 	}
 
+	@Override
+	public void initialize() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

@@ -71,4 +71,10 @@ public class Day4 implements InputHandler {
 		logger.info("Fully Contains count: "+containsCount);
 	}
 
+	@Override
+	public void initialize() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

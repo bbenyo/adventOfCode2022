@@ -202,5 +202,11 @@ public class Day7 implements InputHandler {
 		
 		logger.info("Total Size: "+total);
 	}
+
+	@Override
+	public void initialize() {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

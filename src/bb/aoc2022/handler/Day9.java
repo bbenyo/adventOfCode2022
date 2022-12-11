@@ -77,4 +77,10 @@ public class Day9 implements InputHandler {
 		logger.info("Number of locations visited by the tail: "+visited.size());
 	}
 
+	@Override
+	public void initialize() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

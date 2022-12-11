@@ -61,4 +61,10 @@ public class Day1 implements InputHandler {
 		logger.info("Most Calories: "+mostCaloriesElf);
 	}
 
+	@Override
+	public void initialize() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

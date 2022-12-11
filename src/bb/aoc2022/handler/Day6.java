@@ -49,4 +49,10 @@ public class Day6 implements InputHandler {
 
 	}
 
+	@Override
+	public void initialize() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

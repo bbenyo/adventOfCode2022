@@ -102,4 +102,10 @@ public class Day8 implements InputHandler {
 		logger.info("Visible Count: "+visCount);
 	}
 
+	@Override
+	public void initialize() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

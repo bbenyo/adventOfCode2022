@@ -62,4 +62,10 @@ public class Day3 implements InputHandler {
 		logger.info("Total Score: "+totalScore);
 	}
 
+	@Override
+	public void initialize() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
