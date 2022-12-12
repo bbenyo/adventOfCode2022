@@ -42,6 +42,7 @@ public class MainProgram {
 		
 		InputHandler handler = createInputHandler(dayNumber, bVersion);
 		if (handler != null) {
+			handler.initialize();
 			try {
 				String input = null;
 				if (testOrInput.equalsIgnoreCase("test")) {
