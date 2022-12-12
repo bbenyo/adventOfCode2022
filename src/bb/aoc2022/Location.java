@@ -46,7 +46,7 @@ public class Location  {
 		}
 		return false;
 	}
-
+	
 	public int getY() {
 		return y;
 	}
