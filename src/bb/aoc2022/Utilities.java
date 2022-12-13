@@ -119,6 +119,11 @@ public class Utilities {
 		return counts;
 	}
 	
+	static public int countChar(String s, char c) {
+		return s.length() - s.replace(String.valueOf(c), "").length();
+	}
+	
+	
 	/**
 	 * Get the substring of str that starts after the 'before' substring, and ends just before the 'after' substring
 	 *    Starting a startPos
