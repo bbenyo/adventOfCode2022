@@ -11,6 +11,19 @@ public class Location  {
 		this.y = y;
 	}
 	
+	public Location(String xy) {
+		String[] coords = xy.split(",");
+		if (coords.length != 2) {
+			throw new IllegalArgumentException("Line doesn't have 2 coordinates: "+coords.length);
+		}
+		try {
+			x = Integer.parseInt(coords[0]);
+			y = Integer.parseInt(coords[1]);
+		} catch (NumberFormatException ex) {
+			throw new IllegalArgumentException(ex.toString());
+		}
+	}
+	
 	public String toString() {
 		return x+","+y;
 	}
