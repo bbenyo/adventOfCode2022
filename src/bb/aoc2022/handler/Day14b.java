@@ -25,7 +25,7 @@ public class Day14b extends Day14 {
 	protected boolean inAbyss(Location loc) {
 		Location sandLoc = getGridLoc(500,0);
 		// Also if the sand input loc is filled, we're done
-		if (loc.getX() == sandLoc.getX() && loc.getY() == sandLoc.getY()) {
+		if (loc.equals(sandLoc)) {
 			return true;
 		}
 		return super.inAbyss(loc);

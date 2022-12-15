@@ -11,7 +11,11 @@ import bb.aoc2022.Utilities;
 
 public class Day15 implements InputHandler {
 	static private Logger logger = Logger.getLogger(Day15.class.getName());
-	char[][] grid;
+	
+	// We only care about one specific row
+	int relevantRow = 2000000;
+	char[] row;
+	// char[][] grid;
 	// Calculate the bounding box for our grid
 	int minX = Integer.MAX_VALUE;
 	int maxX = Integer.MIN_VALUE;
@@ -23,6 +27,8 @@ public class Day15 implements InputHandler {
 		Location sensorLoc;
 		Location nearestBeacon;
 		
+		int beaconDist;
+		
 		public Sensor(int x, int y) {
 			sensorLoc = new Location(x,y);
 		}
@@ -32,45 +38,42 @@ public class Day15 implements InputHandler {
 			return "Sensor at "+sensorLoc+" nearest beacon at: "+nearestBeacon;
 		}
 		
-		protected void updateGrid(int x, int y) {
-			if (grid[y][x] == '.') grid[y][x] = '#';
+		protected void updateGrid(int x, int y, char c) {
+			if (y == (relevantRow - minY)) {
+				if (row[x] == '.') row[x] = c;
+			}
 		}
-				
+						
 		protected void addToGrid() {
 			Location sLoc = getGridLoc(sensorLoc);
-			grid[sLoc.getY()][sLoc.getX()] = 'S';
+			updateGrid(sLoc.getX(), sLoc.getY(), 'S');
 			Location bLoc = getGridLoc(nearestBeacon);
-			grid[bLoc.getY()][bLoc.getX()] = 'B';
+			updateGrid(bLoc.getX(), bLoc.getY(), 'B');
+			// Start straight up or down to the relevant row
 			int mDist = sLoc.manhattanDistance(bLoc);
-			for (int i=1; i<=mDist; ++i) {
-				// Start up from sensorLoc
-				int y = sLoc.getY() - i;
-				int x = sLoc.getX();
-				updateGrid(x, y);
-				// Diagonal down right
-				while (y != sLoc.getY()) {
-					y = y + 1;
-					x = x + 1;
-					updateGrid(x, y);					
-				}
-				// Diagonal down left
-				while (y < sLoc.getY() + i) {
-					y = y + 1;
-					x = x - 1;
-					updateGrid(x, y);
-				}
-				// Diagonal up right
-				while ( y != sLoc.getY()) {
-					y = y - 1;
-					x = x - 1;
-					updateGrid(x, y);
-				}
-				// Back to vertical
-				while ( y > sLoc.getY() - i) {
-					y = y - 1;
-					x = x + 1;
-					updateGrid(x, y);
-				}
+			int x = sLoc.getX();
+			int y = (relevantRow - minY);
+			Location rowLoc = new Location(x, y);
+			int curDist = sLoc.manhattanDistance(rowLoc);
+			// Go left
+			while (x >= 0 && curDist <= mDist) {
+				updateGrid(x, y, '#');
+				x--;
+				rowLoc = new Location(x, y);
+				curDist = sLoc.manhattanDistance(rowLoc);
+			}
+			
+			// And go Right
+			x = sLoc.getX();
+			y = (relevantRow - minY);
+			rowLoc = new Location(x, y);
+			curDist = sLoc.manhattanDistance(rowLoc);
+			// Go left
+			while (x < row.length && curDist <= mDist) {
+				updateGrid(x, y, '#');
+				x++;
+				rowLoc = new Location(x, y);
+				curDist = sLoc.manhattanDistance(rowLoc);
 			}
 		}
 	}
@@ -137,38 +140,48 @@ public class Day15 implements InputHandler {
 	}
 	
 	protected void writeGrid() {
-		int width = (maxX - minX) + (buffer * 5);
-		int height = (maxY - minY) + (buffer * 5);
-		StringBuilder sb = new StringBuilder();
-		for (int i=0; i<height; ++i) {
-			sb.append(System.lineSeparator());
-			for (int j=0; j<width; ++j) {
-				sb.append(grid[i][j]);
-			}
+		StringBuilder sb = new StringBuilder(System.lineSeparator());
+		for (int i=0; i<row.length; ++i) {
+			sb.append(row[i]);
 		}
 		logger.info(sb.toString());
 	}
 	
 	protected void constructGrid() {
-		int width = (maxX - minX) + (buffer * 5); 
-		int height = (maxY - minY) + (buffer * 5);
+		minX = minX - buffer;
+		maxX = maxX + buffer;
+		minY = minY - buffer;
+		maxY = maxY + buffer;
+		int width = (maxX - minX); 
+		int height = (maxY - minY);
 		logger.info("Grid has dimensions "+width+","+height);
-		grid = new char[height][width];
-		for (int i=0; i<height; ++i) {
-			for (int j=0; j<width; ++j) {
-				grid[i][j] = '.';
-			}
+		row = new char[width];
+		for (int j=0; j<width; ++j) {
+			row[j] = '.';
 		}
 		for (Sensor sensor : sensors) {
+			logger.info("Adding "+sensor+" to grid");
 			sensor.addToGrid();
 		}
+	}
+	
+	protected int countBlockedLocations() {
+		int count = 0;
+		for (int j=0; j<row.length; ++j) {
+			if (row[j] != '.' && row[j] != 'B') {
+				count++;
+			}
+		}
+		return count;
 	}
 	
 
 	@Override
 	public void output() {
 		constructGrid();
-		writeGrid();
+		// writeGrid();
+		
+		logger.info("For row y="+relevantRow+" blocked locations: "+countBlockedLocations());
 	}
 
 }
