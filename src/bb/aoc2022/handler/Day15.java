@@ -31,12 +31,47 @@ public class Day15 implements InputHandler {
 		public String toString() {
 			return "Sensor at "+sensorLoc+" nearest beacon at: "+nearestBeacon;
 		}
+		
+		protected void updateGrid(int x, int y) {
+			if (grid[y][x] == '.') grid[y][x] = '#';
+		}
 				
 		protected void addToGrid() {
 			Location sLoc = getGridLoc(sensorLoc);
 			grid[sLoc.getY()][sLoc.getX()] = 'S';
 			Location bLoc = getGridLoc(nearestBeacon);
 			grid[bLoc.getY()][bLoc.getX()] = 'B';
+			int mDist = sLoc.manhattanDistance(bLoc);
+			for (int i=1; i<=mDist; ++i) {
+				// Start up from sensorLoc
+				int y = sLoc.getY() - i;
+				int x = sLoc.getX();
+				updateGrid(x, y);
+				// Diagonal down right
+				while (y != sLoc.getY()) {
+					y = y + 1;
+					x = x + 1;
+					updateGrid(x, y);					
+				}
+				// Diagonal down left
+				while (y < sLoc.getY() + i) {
+					y = y + 1;
+					x = x - 1;
+					updateGrid(x, y);
+				}
+				// Diagonal up right
+				while ( y != sLoc.getY()) {
+					y = y - 1;
+					x = x - 1;
+					updateGrid(x, y);
+				}
+				// Back to vertical
+				while ( y > sLoc.getY() - i) {
+					y = y - 1;
+					x = x + 1;
+					updateGrid(x, y);
+				}
+			}
 		}
 	}
 	
@@ -95,15 +130,15 @@ public class Day15 implements InputHandler {
 		logger.info("Adding sensor: "+sensor);
 		int mDist = sensor.sensorLoc.manhattanDistance(beacon);
 		if (mDist > buffer) {
-			buffer = mDist;
+			buffer = mDist + 2;
 		}
 		updateBoundingBox(sensor.sensorLoc);
 		updateBoundingBox(sensor.nearestBeacon);
 	}
 	
 	protected void writeGrid() {
-		int width = (maxX - minX) + buffer;
-		int height = (maxY - minY) + buffer;
+		int width = (maxX - minX) + (buffer * 5);
+		int height = (maxY - minY) + (buffer * 5);
 		StringBuilder sb = new StringBuilder();
 		for (int i=0; i<height; ++i) {
 			sb.append(System.lineSeparator());
@@ -115,8 +150,8 @@ public class Day15 implements InputHandler {
 	}
 	
 	protected void constructGrid() {
-		int width = (maxX - minX) + buffer; 
-		int height = (maxY - minY) + buffer;
+		int width = (maxX - minX) + (buffer * 5); 
+		int height = (maxY - minY) + (buffer * 5);
 		logger.info("Grid has dimensions "+width+","+height);
 		grid = new char[height][width];
 		for (int i=0; i<height; ++i) {
