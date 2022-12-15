@@ -166,5 +166,27 @@ public class Utilities {
 	static public String listToString(List<?> l, String separator) {
 		return l.stream().map(Object::toString).collect(Collectors.joining(separator));
 	}
+
+	static public Integer parseInt(String line, String prefix, String suffix) {
+		return parseInt(line, 0, prefix, suffix);
+	}
+	
+	static public Integer parseInt(String line, int startPos, String prefix, String suffix) {
+		int lPos = line.indexOf(prefix, startPos);
+		if (lPos == -1) {
+			logger.error("Unable to find string prefix "+prefix+" in "+line);
+			return null;
+		}
+		if (suffix.length() == 0) {
+			return Integer.parseInt(line.substring(lPos+prefix.length()));
+		}
+		int rPos = line.indexOf(suffix, lPos);
+		if (rPos == -1) {
+			logger.error("Unable to find string suffix "+suffix+" after "+prefix+" in "+line);
+			return null;
+		}
+		// Allow this to throw an exception on a bad input
+		return Integer.parseInt(line.substring(lPos+prefix.length(), rPos));
+	}
 	
 }

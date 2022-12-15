@@ -67,6 +67,10 @@ public class Location  {
 	public void setY(int y) {
 		this.y = y;
 	}
+	
+	public int manhattanDistance(Location l2) {
+		return Math.abs(l2.getX() - getX()) + Math.abs(l2.getY() - getY());
+	}
 
 	@Override
 	public int hashCode() {
