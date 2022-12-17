@@ -172,21 +172,41 @@ public class Utilities {
 	}
 	
 	static public Integer parseInt(String line, int startPos, String prefix, String suffix) {
-		int lPos = line.indexOf(prefix, startPos);
-		if (lPos == -1) {
-			logger.error("Unable to find string prefix "+prefix+" in "+line);
+		String str = parseString(line, startPos, prefix, suffix);
+		// Allow this to throw an exception on a bad input
+		return Integer.parseInt(str);
+	}
+
+	static public String parseString(String line, int startPos, String prefix, String suffix) {
+		return parseString(line, startPos, Arrays.asList(prefix), suffix);
+	}
+	
+	static public String parseString(String line, int startPos, List<String> prefixes, String suffix) {
+		int lPos = -1;
+		String prefix = null;
+		for (String pre : prefixes) {
+			lPos = line.indexOf(pre, startPos);
+			if (lPos == -1) {
+				continue;
+			}
+			prefix = pre;
+			break;			
+		}
+		
+		if (lPos == -1 || prefix == null) {
+			logger.error("Unable to find any prefix in: "+line);
 			return null;
 		}
+		
 		if (suffix.length() == 0) {
-			return Integer.parseInt(line.substring(lPos+prefix.length()));
+			return line.substring(lPos+prefix.length());
 		}
 		int rPos = line.indexOf(suffix, lPos);
 		if (rPos == -1) {
 			logger.error("Unable to find string suffix "+suffix+" after "+prefix+" in "+line);
 			return null;
 		}
-		// Allow this to throw an exception on a bad input
-		return Integer.parseInt(line.substring(lPos+prefix.length(), rPos));
+		return line.substring(lPos+prefix.length(), rPos);
 	}
 	
 }
