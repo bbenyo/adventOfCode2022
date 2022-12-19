@@ -71,10 +71,8 @@ public class Location3D extends Location {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + z;
-		return result;
+		// Too many collisions with only 3 ints, let's hash the toString instead
+		return toString().hashCode();
 	}
 
 	@Override
@@ -91,6 +89,4 @@ public class Location3D extends Location {
 		return true;
 	}
 	
-	
-
 }

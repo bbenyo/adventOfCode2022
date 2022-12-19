@@ -231,6 +231,13 @@ public class Day16 implements InputHandler {
 			this.room = r;
 			this.target = tgt;
 		}
+		
+		public RoomSearchState(RoomSearchState prior, Room r, String tgt) {
+			super(prior, r.valve);
+			this.room = r;
+			this.target = tgt;
+			this.setStateHash();
+		}
 
 		@Override
 		public boolean win() {
@@ -245,7 +252,7 @@ public class Day16 implements InputHandler {
 				if (r2 == null) {
 					logger.error("Unable to find the room for "+tunnel);
 				} else {
-					RoomSearchState rss2 = new RoomSearchState(r2, target);
+					RoomSearchState rss2 = new RoomSearchState(this, r2, target);					
 					moves.add(rss2);
 				}
 			}

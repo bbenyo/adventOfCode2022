@@ -25,12 +25,13 @@ abstract public class GameState {
 		setStateHash();
 	}
 	
-	public GameState(GameState oState) {
-		setStateHash();
+	public GameState(GameState oState, String label) {
+		this.label = label;
 		score = oState.score;
 		priorStates = new ArrayList<GameState>();
 		priorStates.addAll(oState.priorStates);
 		priorStates.add(oState);
+		setStateHash();
 	}
 	
 	public void setNoMoves(boolean flag) {
@@ -183,19 +184,17 @@ abstract public class GameState {
 				winner = state;
 				break;
 			}
-			alreadySearched.add(state.stateHash);
 			List<GameState> moves = state.generatePossibleMoves();
 			for (int m1 = 0; m1 < moves.size(); ++m1) {
 				// Iterate from the end of the list
 				//   The possible moves are ordered heuristically, we want to 
 				//   investigate the first one first, so it needs to be last on the stack
 				GameState nState = moves.get(moves.size() - 1 - m1);
-				nState.getPath().addAll(state.getPath());
-				nState.getPath().add(state);
 				if (alreadySearched.contains(nState.stateHash)) {
 					continue;					
 				}
 				workList.add(nState);
+				alreadySearched.add(nState.stateHash);
 			}
 			logger.info("Search step: "+index+" worklist size: "+workList.size());
 		}
