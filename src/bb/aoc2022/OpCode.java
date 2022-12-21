@@ -25,7 +25,7 @@ public class OpCode {
 		}
 		cmd = split[0];
 		for (int i=1; i<split.length; ++i) {
-			args.add(split[i]);
+			args.add(split[i].trim());
 		}
 	}
 	
