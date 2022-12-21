@@ -174,7 +174,11 @@ public class Utilities {
 	static public Integer parseInt(String line, int startPos, String prefix, String suffix) {
 		String str = parseString(line, startPos, prefix, suffix);
 		// Allow this to throw an exception on a bad input
-		return Integer.parseInt(str);
+		if (str != null) {
+			return Integer.parseInt(str.trim());
+		} else {
+			return null;
+		}
 	}
 
 	static public String parseString(String line, int startPos, String prefix, String suffix) {
@@ -201,7 +205,7 @@ public class Utilities {
 		if (suffix.length() == 0) {
 			return line.substring(lPos+prefix.length());
 		}
-		int rPos = line.indexOf(suffix, lPos);
+		int rPos = line.indexOf(suffix, lPos+prefix.length());
 		if (rPos == -1) {
 			logger.error("Unable to find string suffix "+suffix+" after "+prefix+" in "+line);
 			return null;

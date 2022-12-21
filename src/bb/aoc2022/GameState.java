@@ -15,7 +15,7 @@ abstract public class GameState {
 	protected long score;
 	// To avoid wasted search going back and forth between two identical states
 	protected List<GameState> priorStates;
-	int stateHash;
+	protected int stateHash;
 	protected boolean noMoves = false;
 	
 	public GameState(String loc) {
@@ -32,6 +32,13 @@ abstract public class GameState {
 		priorStates.addAll(oState.priorStates);
 		priorStates.add(oState);
 		setStateHash();
+	}
+	
+	// Do we want to keep track of states we've searched or not?
+	//  If true (ignore already searched), we won't maintain the hashset of states
+	//   This is useful if we're incrementing time as part of the state, so we never really search the same state
+	public boolean ignoreAlreadySearchedDFS() {
+		return false;
 	}
 	
 	public void setNoMoves(boolean flag) {
@@ -120,7 +127,9 @@ abstract public class GameState {
 		while (!workList.isEmpty()) {
 			index++;
 			GameState state = workList.pop();
-			alreadySearched.put(state.stateHash, state);
+			if (!state.ignoreAlreadySearchedDFS()) {
+				alreadySearched.put(state.stateHash, state);
+			}
 			List<GameState> moves = state.generatePossibleMoves();
 			
 			if (moves.isEmpty()) {
@@ -136,7 +145,7 @@ abstract public class GameState {
 			
 			if (winner != null && state.worseScoreThan(winner)) {
 				// Winner is already better than this, we're done on this branch
-				logger.info("Found winner, but existing winner is better: "+state.getScore()+" winner: "+winner.getScore());
+				logger.info("Existing winner is better than this state: "+state.getScore()+" winner: "+winner.getScore());
 				continue;
 			}
 						
@@ -154,12 +163,16 @@ abstract public class GameState {
 					continue;
 				}
 				workList.add(nState);
-				alreadySearched.put(nState.stateHash, nState);
+				if (!state.ignoreAlreadySearchedDFS()) {
+					alreadySearched.put(nState.stateHash, nState);
+				}
 			}
-			logger.info("Search step: "+index+" worklist size: "+workList.size()+" found win: "+(winner != null));
+			StringBuffer sb = new StringBuffer("Search step: "+index);
+			sb.append(" worklist size: "+workList.size());
 			if (winner != null) {
-				logger.info("\tWinner score: "+winner.getScore());
+				sb.append(" Winner score: "+winner.getScore());
 			}
+			logger.info(sb.toString());
 		}
 		return winner;
 	}
