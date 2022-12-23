@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-
 import bb.aoc2022.InputHandler;
 import bb.aoc2022.Location;
 
@@ -39,6 +38,7 @@ public class Day22 implements InputHandler {
 		@Override
 		void execute() {
 			for (int i=0; i<steps; ++i) {
+				// logger.info(me);
 				if (!forward()) {
 					// We're stuck at a wall
 					return;
@@ -49,6 +49,7 @@ public class Day22 implements InputHandler {
 	
 	protected boolean forward() {
 		Location newLoc = new Location(me.getX(), me.getY());
+		char oldFacing = facing;
 		switch(facing) {
 		case '>' : newLoc.setX(me.getX() + 1); handleRightWrap(newLoc); break;
 		case '<' : newLoc.setX(me.getX() - 1); handleLeftWrap(newLoc); break;
@@ -57,13 +58,16 @@ public class Day22 implements InputHandler {
 		default:
 			logger.error("Unknown facing: "+facing);
 		}
+
 		String row = grid.get(newLoc.getY());
 		if (row.charAt(newLoc.getX()) == '#') {
 			// Stuck at a wall, we don't move
+			facing = oldFacing;
 			return false;
 		} else if (row.charAt(newLoc.getX()) != '.') {
 			logger.error("Invalid cell: "+newLoc);
 		}
+	
 		me = newLoc;
 		return true;
 	}
