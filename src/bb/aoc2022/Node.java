@@ -165,14 +165,13 @@ public class Node extends Location {
 		return false;
 	}
 	
-	Map<String, Node> nodes = new HashMap<String, Node>();
+	static Map<String, Node> nodes = new HashMap<String, Node>();
 
 	// A*
 
-	List<Node> openSet = new ArrayList<Node>();
-	
-	public Node search(Location startLoc) {
-		Node start = createNode(startLoc);
+	static public Node search(Node start) {
+
+		List<Node> openSet = new ArrayList<Node>();
 		openSet.add(start);
 		start.gScore = 0;
 		
@@ -197,12 +196,12 @@ public class Node extends Location {
 			next.gatherNeighbors();
 			next.computeHScore();
 			
-			logger.info("Searching: "+next);
-			if (isEnd(next)) {
+			logger.info("Searching: "+next+" OpenSet: "+openSet.size());
+			if (start.isEnd(next)) {
 				return next;
 			}
 			for (Node n1 : next.neighbors) {
-				int g = next.gScore + getValue(n1);
+				int g = next.gScore + start.getValue(n1);
 				logger.info("Neighbor "+n1+" g: "+g);
 				// If the path from next to n1 is better than any other path we've found to n1:
 				if (g < n1.gScore) {

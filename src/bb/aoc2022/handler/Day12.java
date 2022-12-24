@@ -134,7 +134,7 @@ public class Day12 implements InputHandler {
 		
 		HillNode startNode = new HillNode(start);
 		// Probably quicker to go backwards from the end, but this is fine for now
-		Node foundEnd = startNode.search(start);
+		Node foundEnd = HillNode.search(startNode);
 		if (foundEnd != null) {
 			displayResult(foundEnd);
 		}
