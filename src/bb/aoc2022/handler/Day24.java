@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import bb.aoc2022.InputHandler;
 import bb.aoc2022.Location;
 import bb.aoc2022.LocationFacing;
+import bb.aoc2022.Node;
 
 public class Day24 implements InputHandler {
 	static private Logger logger = Logger.getLogger(Day24.class.getName());
@@ -37,6 +38,48 @@ public class Day24 implements InputHandler {
 				bliz.forward(topLeft, bottomRight, true);
 			}
 		}
+	}
+	
+	// A*
+	class BNode extends Node {
+		
+		int time;
+
+		public BNode(Location l1) {
+			super(l1);
+		}
+		
+		// Heuristic, guess on the risk score for the path to the end
+		//   We'll just do a right/down distance, and assume average risk of 5
+		protected void computeHScore() {
+			int dist = computeHeuristic();
+			int h = (dist * 5);
+			hScore = h;
+		}
+
+		// Compute the worst possible score from this node to initialize G
+		// To be overridden by implementations, this is a default
+		public int getWorstScore(Location l1) {
+			return getGridSizeX() * getGridSizeY(); // Assume we have to visit every square?
+		}
+
+		// Return a heuristic to compute the likely score from this node
+		public int computeHeuristic() {
+			int right = getGridSizeX() - x;
+			int down = getGridSizeY() - y;
+			return right + down;
+		}
+		
+		// Get the maximum X value for a Location
+		public int getGridSizeX() {
+			return grid.get(0).length - 1;
+		}
+		
+		// Get the maximum Y value for a Location
+		public int getGridSizeY() {
+			return grid.size() - 1;
+		}
+		
 	}
 	
 	@Override

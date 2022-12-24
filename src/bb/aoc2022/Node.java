@@ -22,10 +22,10 @@ public class Node extends Location {
 	
 	String label;
 	
-	int gScore = -1;
-	int hScore = 0;
+	protected int gScore = -1;
+	protected int hScore = 0;
 	
-	Set<Node> neighbors;
+	protected Set<Node> neighbors;
 	Node backPath;
 		
 	public Node(Location l1) {

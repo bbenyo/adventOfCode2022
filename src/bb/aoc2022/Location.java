@@ -3,8 +3,8 @@ package bb.aoc2022;
 import java.util.Objects;
 
 public class Location  {
-	int x;
-	int y;
+	protected int x;
+	protected int y;
 	
 	public Location(int x, int y) {
 		this.x = x;
