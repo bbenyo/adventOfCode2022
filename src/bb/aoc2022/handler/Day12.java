@@ -57,7 +57,7 @@ public class Day12 implements InputHandler {
 		
 		// We have a specific end
 		@Override
-		public boolean isEnd(Location loc) {
+		public boolean isEnd(Node loc) {
 			if (loc.getX() == end.getX() && loc.getY() == end.getY()) {
 				return true;
 			}

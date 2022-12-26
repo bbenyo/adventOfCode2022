@@ -42,7 +42,7 @@ public class Node extends Location {
 	public void addNeighbor(Node neighbor) {
 		this.neighbors.add(neighbor);
 	}
-	
+
 	// Heuristic, guess on the risk score for the path to the end
 	//   We'll just do a right/down distance, and assume average risk of 5
 	protected void computeHScore() {
@@ -77,11 +77,10 @@ public class Node extends Location {
 	}
 	
 	// The value/risk/cost of going to location cur
-	public int getValue(Location cur) {
+	public int getCost(Location cur) {
 		return 1;
 	}
-
-			
+	
 	public int getF() {
 		return gScore + hScore;
 	}
@@ -157,7 +156,7 @@ public class Node extends Location {
 	}
 		
 	// Bottom right
-	public boolean isEnd(Location loc) {
+	public boolean isEnd(Node loc) {
 		if ((loc.getY() == getGridSizeY() - 1) &&
 			(loc.getX() == getGridSizeX() - 1)) {
 			return true;
@@ -201,14 +200,17 @@ public class Node extends Location {
 				return next;
 			}
 			for (Node n1 : next.neighbors) {
-				int g = next.gScore + start.getValue(n1);
+				int g = next.gScore + start.getCost(n1);
 				logger.info("Neighbor "+n1+" g: "+g);
 				// If the path from next to n1 is better than any other path we've found to n1:
-				if (g < n1.gScore) {
+				if (g <= n1.gScore) {
 					n1.backPath = next;
 					n1.gScore = g;
 					if (!openSet.contains(n1)) {
-						openSet.add(n1);
+						n1.computeHScore();
+						openSet.add(n1);						
+					} else {
+						logger.info("same state");
 					}
 				}
 			}

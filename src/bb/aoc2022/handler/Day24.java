@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -60,13 +61,14 @@ public class Day24 implements InputHandler {
 	
 	
 	// A*
-	class BNode extends Node {
+	protected class BNode extends Node {
 		
 		int time;
 
 		public BNode(Location l1, int time) {
 			super(l1);
 			this.time = time;
+			this.gScore = this.getWorstScore(l1);
 		}
 		
 		@Override
@@ -74,6 +76,26 @@ public class Day24 implements InputHandler {
 			return super.toString()+" time: "+time;
 		}
 		
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = super.hashCode();
+			result = prime * result + Objects.hash(time);
+			return result;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (!super.equals(obj))
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			BNode other = (BNode) obj;
+			return time == other.time;
+		}
+
 		// Heuristic, guess on the risk score for the path to the end
 		//   We'll just do a right/down distance, and assume average risk of 5
 		@Override
@@ -112,9 +134,9 @@ public class Day24 implements InputHandler {
 		
 		// Bottom right
 		@Override
-		public boolean isEnd(Location loc) {
-			if ((loc.getY() == getGridSizeY() - 1) &&
-				(loc.getX() == getGridSizeX() - 1)) {
+		public boolean isEnd(Node loc) {
+			if ((loc.getY() == bottomRight.getY() + 1) &&
+				(loc.getX() == bottomRight.getX())) {
 				return true;
 			}
 			return false;
@@ -123,7 +145,11 @@ public class Day24 implements InputHandler {
 		boolean isValidLocation(Location l) {
 			int x = l.getX();
 			int y = l.getY();
-			if (x == 1 && y == 0) {
+			if (x == 1 && y == 0) { // start
+				return true;
+			}
+			if (x == bottomRight.getX() &&
+				y == bottomRight.getY() + 1) { // end
 				return true;
 			}
 			if (x >= topLeft.getX() && x <= bottomRight.getX() &&
@@ -175,7 +201,6 @@ public class Day24 implements InputHandler {
 			BNode node = new BNode(lup, time + 1);
 			this.neighbors.add(node);
 		}
-		
 	}
 	
 	protected TimeState getBoardState(int time) {
@@ -294,8 +319,7 @@ public class Day24 implements InputHandler {
 		BNode endNode = (BNode)end;		
 		TimeState tEnd = this.getBoardState(endNode.time);
 		drawGrid(tEnd);
-		logger.info("End Time - 1: "+endNode.time);
-		logger.info("Move down 1, endTime: "+(endNode.time + 1));
+		logger.info("End Time: "+endNode.time);
 	}
 
 }
